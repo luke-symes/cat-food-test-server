@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DeliveryResponse } from 'src/comms/types/delivery-response';
 import * as deliveriesData from 'data.json';
 import { Delivery } from 'src/types/delivery';
+import { POUCH_PRICES } from 'src/constants/pouch-prices';
 
 @Injectable()
 export class CommsService {
@@ -20,7 +21,7 @@ export class CommsService {
     return {
       title: `Your next delivery for ${catsNamesFormatted}`,
       message: `Hey ${deliveryData.firstName}! In two days' time, we'll be charging you for your next order for ${catsNamesFormatted}'s fresh food.`,
-      totalPrice: 0,
+      totalPrice: this.calculateTotalPrice(deliveryData.cats),
       freeGift: true,
     };
   }
@@ -43,5 +44,14 @@ export class CommsService {
     }
 
     return namesString;
+  }
+
+  private calculateTotalPrice(cats: Delivery['cats']): number {
+    let totalPrice: number = 0;
+    cats.forEach((cat) => {
+      const pouchPrice = POUCH_PRICES[cat.pouchSize];
+      if (cat.subscriptionActive) totalPrice += pouchPrice;
+    });
+    return totalPrice;
   }
 }
