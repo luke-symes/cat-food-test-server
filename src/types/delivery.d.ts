@@ -13,4 +13,4 @@ export interface Cat {
   pouchSize: PouchSize;
 }
 
-export type PouchSize = 'A' | 'B' | 'C' | 'D' | 'E';
+export type PouchSize = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
