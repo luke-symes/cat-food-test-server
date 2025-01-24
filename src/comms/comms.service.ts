@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DeliveryResponse } from 'src/comms/types/delivery-response';
 import * as deliveriesData from 'data.json';
-import { Delivery } from 'types/delivery';
+import { Delivery } from 'src/comms/types/delivery';
 
 @Injectable()
 export class CommsService {
