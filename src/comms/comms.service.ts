@@ -16,11 +16,31 @@ export class CommsService {
       throw new HttpException('No order found', HttpStatus.NOT_FOUND);
 
     return {
-      title: "Your next delivery for <cat names, separated by comma or 'and'>",
+      title: `Your next delivery for ${this.formatCatsNames(deliveryData.cats)}`,
       message:
         "Hey <firstName>! In two days' time, we'll be charging you for your next order for <cat names, formatted as described below>'s fresh food.",
       totalPrice: 0,
       freeGift: true,
     };
+  }
+
+  private formatCatsNames(cats: Delivery['cats']): string {
+    let namesString: string = '';
+
+    if (cats.length === 1) {
+      return cats[0].name;
+    } else {
+      cats.forEach((cat, index) => {
+        if (index === cats.length - 2) {
+          namesString += `${cat.name} `;
+        } else if (index === cats.length - 1) {
+          namesString += `and ${cat.name}`;
+        } else {
+          namesString += `${cat.name}, `;
+        }
+      });
+    }
+
+    return namesString;
   }
 }
