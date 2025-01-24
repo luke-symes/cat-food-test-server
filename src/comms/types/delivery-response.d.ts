@@ -1,4 +1,4 @@
-export interface Delivery {
+export interface DeliveryResponse {
   title: string;
   message: string;
   totalPrice: number;
