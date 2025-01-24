@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DeliveryResponse } from 'src/comms/types/delivery-response';
-import * as deliveriesData from 'data.json';
+import deliveriesData from 'data.json';
 import { Delivery } from 'src/types/delivery';
 import { POUCH_PRICES } from 'src/constants/pouch-prices';
 
