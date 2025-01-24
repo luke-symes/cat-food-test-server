@@ -17,12 +17,14 @@ export class CommsService {
       throw new HttpException('No order found', HttpStatus.NOT_FOUND);
 
     const catsNamesFormatted = this.formatCatsNames(deliveryData.cats);
+    const totalPrice = this.calculateTotalPrice(deliveryData.cats);
+    const freeGift = this.isEligibleForFreeGift(totalPrice);
 
     return {
       title: `Your next delivery for ${catsNamesFormatted}`,
       message: `Hey ${deliveryData.firstName}! In two days' time, we'll be charging you for your next order for ${catsNamesFormatted}'s fresh food.`,
-      totalPrice: this.calculateTotalPrice(deliveryData.cats),
-      freeGift: true,
+      totalPrice,
+      freeGift,
     };
   }
 
@@ -53,5 +55,9 @@ export class CommsService {
       if (cat.subscriptionActive) totalPrice += pouchPrice;
     });
     return totalPrice;
+  }
+
+  private isEligibleForFreeGift(totalPrice: number): boolean {
+    return totalPrice > 120;
   }
 }
