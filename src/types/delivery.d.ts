@@ -6,11 +6,11 @@ export interface Delivery {
   cats: Cat[];
 }
 
-interface Cat {
+export interface Cat {
   name: string;
   subscriptionActive: boolean;
   breed: string;
   pouchSize: PouchSize;
 }
 
-type PouchSize = 'A' | 'B' | 'C' | 'D' | 'E';
+export type PouchSize = 'A' | 'B' | 'C' | 'D' | 'E';
