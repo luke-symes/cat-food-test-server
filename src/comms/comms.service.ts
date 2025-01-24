@@ -15,10 +15,11 @@ export class CommsService {
     if (!deliveryData)
       throw new HttpException('No order found', HttpStatus.NOT_FOUND);
 
+    const catsNamesFormatted = this.formatCatsNames(deliveryData.cats);
+
     return {
-      title: `Your next delivery for ${this.formatCatsNames(deliveryData.cats)}`,
-      message:
-        "Hey <firstName>! In two days' time, we'll be charging you for your next order for <cat names, formatted as described below>'s fresh food.",
+      title: `Your next delivery for ${catsNamesFormatted}`,
+      message: `Hey ${deliveryData.firstName}! In two days' time, we'll be charging you for your next order for ${catsNamesFormatted}'s fresh food.`,
       totalPrice: 0,
       freeGift: true,
     };
