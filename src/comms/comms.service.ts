@@ -1,11 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Delivery } from 'src/comms/types/delivery';
-import * as data from 'data.json';
+import { DeliveryResponse } from 'src/comms/types/delivery-response';
+import * as deliveriesData from 'data.json';
+import { Delivery } from 'types/delivery';
 
 @Injectable()
 export class CommsService {
-  getNextDelivery(userId: string): Delivery {
-    const deliveryData = data.find((delivery) => delivery.id === userId);
+  private data: Delivery[] = JSON.parse(JSON.stringify(deliveriesData));
+
+  getNextDelivery(userId: string): DeliveryResponse {
+    const deliveryData: Delivery | undefined = this.data.find(
+      (delivery) => delivery.id === userId,
+    );
 
     if (!deliveryData)
       throw new HttpException('No order found', HttpStatus.NOT_FOUND);
