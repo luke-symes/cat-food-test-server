@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CommsController } from './comms/comms.controller';
-import { CommsService } from './comms/comms.service';
+import { CommsModule } from 'src/comms/comms.module';
 
 @Module({
-  controllers: [CommsController],
-  providers: [CommsService],
+  imports: [CommsModule],
 })
 export class AppModule {}
