@@ -1,20 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DeliveryResponse } from 'src/comms/types/delivery-response';
-import deliveriesData from 'data.json';
-import { Delivery } from 'src/types/delivery';
+import {
+  DeliveriesSchema,
+  DeliveriesSchemaType,
+  DeliverySchemaType,
+} from 'src/lib/delivery/schema/delivery';
 import { POUCH_PRICES } from 'src/constants/pouch-prices';
+import * as fs from 'node:fs';
 
 @Injectable()
 export class CommsService {
-  private data: Delivery[] = JSON.parse(JSON.stringify(deliveriesData));
-
   getNextDelivery(userId: string): DeliveryResponse {
-    const deliveryData: Delivery | undefined = this.data.find(
-      (delivery) => delivery.id === userId,
-    );
-
-    if (!deliveryData)
-      throw new HttpException('No order found', HttpStatus.NOT_FOUND);
+    const jsonData = this.readJson();
+    const validatedData = this.validateJson(jsonData);
+    const deliveryData = this.findDelivery(validatedData, userId);
 
     const catsNamesFormatted = this.formatCatsNames(deliveryData.cats);
     const totalPrice = this.calculateTotalPrice(deliveryData.cats);
@@ -28,7 +27,7 @@ export class CommsService {
     };
   }
 
-  private formatCatsNames(cats: Delivery['cats']): string {
+  private formatCatsNames(cats: DeliverySchemaType['cats']): string {
     let namesString: string = '';
 
     if (cats.length === 1) {
@@ -48,7 +47,7 @@ export class CommsService {
     return namesString;
   }
 
-  private calculateTotalPrice(cats: Delivery['cats']): number {
+  private calculateTotalPrice(cats: DeliverySchemaType['cats']): number {
     let totalPrice: number = 0;
     cats.forEach((cat) => {
       const pouchPrice = POUCH_PRICES[cat.pouchSize];
@@ -59,5 +58,34 @@ export class CommsService {
 
   private isEligibleForFreeGift(totalPrice: number): boolean {
     return totalPrice > 120;
+  }
+
+  private readJson(): unknown {
+    const jsonString = fs.readFileSync('data.json', 'utf-8');
+    return JSON.parse(jsonString);
+  }
+
+  private validateJson(json: unknown): DeliveriesSchemaType {
+    const validation = DeliveriesSchema.safeParse(json);
+    if (!validation.success) {
+      console.error(
+        `Validation of JSON failed: ${JSON.stringify(validation.error.issues)}`,
+      );
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return validation.data;
+  }
+
+  private findDelivery(data: DeliveriesSchemaType, userId: string) {
+    const deliveryData = data.find((delivery) => delivery.id === userId);
+
+    if (!deliveryData)
+      throw new HttpException('No order found', HttpStatus.NOT_FOUND);
+
+    return deliveryData;
   }
 }
