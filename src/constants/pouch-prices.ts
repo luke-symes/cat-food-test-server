@@ -1,12 +1,12 @@
-import { PouchSize } from 'src/types/delivery';
+import { PouchSizeSchema } from 'src/lib/delivery/schema/delivery';
 
-// prettier-ignore
+const SizeKeys = PouchSizeSchema.Values;
 
-export const POUCH_PRICES: Record<PouchSize, number> = {
-  A: 55.50,
-  B: 59.50,
+export const POUCH_PRICES: Record<keyof typeof SizeKeys, number> = {
+  A: 55.5,
+  B: 59.5,
   C: 62.75,
-  D: 66.00,
-  E: 69.00,
+  D: 66.0,
+  E: 69.0,
   F: 71.25,
 } as const;
