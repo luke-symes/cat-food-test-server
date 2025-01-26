@@ -1,6 +1,8 @@
 ## Getting started
 
-`npm run start` will start the server on http://localhost:3000
+1. `npm install` to download dependencies
+
+1. `npm run start` to start the server on http://localhost:3000
 
 You should see the following output in the terminal:
 
