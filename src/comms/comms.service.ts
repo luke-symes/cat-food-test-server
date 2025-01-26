@@ -11,7 +11,7 @@ import * as fs from 'node:fs';
 @Injectable()
 export class CommsService {
   getNextDelivery(userId: string): DeliveryResponse {
-    const jsonData = this.readJson();
+    const jsonData = this.readJson('data.json');
     const validatedData = this.validateJson(jsonData);
     const deliveryData = this.findDelivery(validatedData, userId);
 
@@ -60,8 +60,8 @@ export class CommsService {
     return totalPrice > 120;
   }
 
-  private readJson(): unknown {
-    const jsonString = fs.readFileSync('data.json', 'utf-8');
+  private readJson(path: string): unknown {
+    const jsonString = fs.readFileSync(path, 'utf-8');
     return JSON.parse(jsonString);
   }
 
